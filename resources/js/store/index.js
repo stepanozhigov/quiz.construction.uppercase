@@ -36,7 +36,13 @@ export default new Vuex.Store({
             connection: []
         },
         isMobile: false,
-        isCallBack: false
+        isCallBack: false,
+        utm: {
+            utm_source: false,
+            utm_campaign: false,
+            utm_medium: false,
+            utm_term: false
+        }
     },
     mutations: {
         callBack(s){
@@ -48,9 +54,19 @@ export default new Vuex.Store({
             }else{
                 s.isMobile = false
             }
+        },
+        SET_UTM: (state,payload) => {
+            state.utm.utm_source = payload.utm_source,
+            state.utm.utm_content = payload.utm_source,
+            state.utm.utm_campaign = payload.utm_campaign,
+            state.utm.utm_medium = payload.utm_medium,
+            state.utm.utm_term = payload.utm_term
         }
     },
     actions: {
+        setUtm: (context,utm) => {
+            context.commit('SET_UTM',utm);
+        },
         callBack({commit}) {
             commit('callBack')
         },
@@ -69,6 +85,7 @@ export default new Vuex.Store({
         questions: s => s.questions,
         phoneCalback: s => s.phoneCalback,
         isMobile: s=> s.isMobile,
-        isCallBack: s=> s.isCallBack
+        isCallBack: s=> s.isCallBack,
+        utm : state=>state.utm
     }
 })

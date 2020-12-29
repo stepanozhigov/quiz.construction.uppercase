@@ -14,8 +14,13 @@
 
     </head>
     <body>
+
+        @php
+            // dd($utm);    
+        @endphp
+
         <div id="app">
-            <App />
+            <App :utm="{{json_encode($utm)}}" />
         </div>
 
         <!-- Scripts -->

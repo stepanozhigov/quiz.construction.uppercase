@@ -1,6 +1,6 @@
 const mix = require('laravel-mix');
 const mqpacker = require("css-mqpacker");
-const sortCSSmq = require('sort-css-media-queries');
+//const sortCSSmq = require('sort-css-media-queries');
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -12,12 +12,23 @@ const sortCSSmq = require('sort-css-media-queries');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-   .sass('resources/sass/app.scss', 'public/css')
-   .options({
-        postCss: [
-        mqpacker({
-                sort: sortCSSmq
-            })
-        ]
-    });
+mix
+.options({
+    processCssUrls: false,
+    autoprefixer: {
+        browsers: ["last 20 versions"]
+    }
+})
+.sourceMaps()
+.webpackConfig({devtool: 'source-map'})
+.js('resources/js/app.js', 'public/js')
+.sass('resources/sass/app.scss', 'public/css');
+
+mix.browserSync({
+    proxy: "quiz.construction.uppercase.local",
+    open: false
+});
+
+if (mix.inProduction()) {
+    mix.version();
+}

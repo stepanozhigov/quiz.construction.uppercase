@@ -7,6 +7,7 @@ use App\Lead;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Http;
 
 class LeadController extends Controller
 {
@@ -35,21 +36,26 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
+        //return response()->json($request->all(),200);
+
         $input = $request->except('_token');
         $lead = Lead::create($input);
 
-        $client = new Client();
+        //$client = new Client();
 
         $amoData = [
             'url'             => 'quiz.construction.uppercase.kz',
             'name'            => "Квиз по лицензированию",
             'phone'           => $request['phone'],
-            'lead_comment'    => $request['text']
+            'lead_comment'    => $request['text'],
+            'utm'             => $request['utm']
         ];
 
-        $result = $client->post('https://amoconnect.ru/amo-ipravo/api/slug/uppercase-quiz-construction', [
-            'form_params' => $amoData
-        ]);
+        $response = Http::asForm()->post('https://amoconnect.ru/amo-ipravo/api/slug/uppercase-quiz-construction',$amoData);
+
+        // $result = $client->post('https://amoconnect.ru/amo-ipravo/api/slug/uppercase-quiz-construction', [
+        //     'form_params' => $amoData
+        // ]);
 
         //ROISTAT BEGIN
         if (isset($request['phone'])) {
@@ -65,6 +71,7 @@ class LeadController extends Controller
         }
         //ROISTAT END
         
+        return response()->json($response->json(),200);
     }
 
     /**
